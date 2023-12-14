@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets" lang="en"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"   xmlns:p="http://primefaces.org/ui">
+
+  <body>
+    <ui:composition template="./../template/Template.xhtml">
+      <ui:define name="content">
+        <h2>CMS Project</h2>
+           <h3>Log in</h3>
+        <br/>
+        <div class=".ui-fluid">
+          <p:panelGrid columns="1">
+          <h:form >
+            <div class="field">
+              <p:outputLabel>UserName</p:outputLabel><p:inputText  type="text" value="#{loginBean.username}"></p:inputText>  
+            </div>
+            <div class="field">  
+              <p:outputLabel>Password</p:outputLabel><p:password value="#{loginBean.password}"  label="Password"> 
+
+              </p:password>
+            </div>
+            <p:commandButton  type="submit" value="Log In" action="#{loginBean.login()}"/> <br/>
+            <br/>
+          </h:form>
+            </p:panelGrid>
+        </div>
+
+
+      </ui:define>
+
+    </ui:composition>
+
+  </body>
+</html>
