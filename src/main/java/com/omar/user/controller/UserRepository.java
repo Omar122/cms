@@ -4,12 +4,11 @@
  */
 package com.omar.user.controller;
 
-
 import com.omar.user.entity.User;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 
 import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.GroupLayout.Group;
 
 /**
  *
@@ -31,9 +31,9 @@ public class UserRepository {
   private EntityManager em;
 
   public User create(User user) throws SQLException {
-    logger.log(Level.INFO, "Creating user {0}", user.getfullName());
+    logger.log(Level.INFO, "Creating user {0}", user.toString());
     em.persist(user);
-   return user;
+    return user;
   }
 
   public List<User> findAll() {
@@ -56,6 +56,26 @@ public class UserRepository {
   public User update(User user) {
     logger.log(Level.INFO, "Updating user {0}", user.getfullName());
     return em.merge(user);
+  }
+
+  public Optional<User> findByUsernameAndPassword(String username, String password) {
+    User user = findByUsername(username).orElseThrow();
+
+    if (!user.getPassword().equals(password)) {
+      throw new NoResultException("password wrong");
+    }
+    return Optional.of(user);
+  }
+
+  private Optional<User> findByUsername(String username) {
+    try {
+      return Optional.of(em
+              .createQuery("FROM User u WHERE u.username = :username", User.class)
+              .setParameter("username", username)
+              .getSingleResult());
+    } catch (NoResultException e) {
+      return Optional.empty();
+    }
   }
 
 }
