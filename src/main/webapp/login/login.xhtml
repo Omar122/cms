@@ -12,6 +12,7 @@
         <br/>
         <div class=".ui-fluid">
           <p:panelGrid columns="1">
+            <input value="helllo"></input>
             <h:form id="form"  >
               <div class="field">
                 <p:outputLabel>UserName</p:outputLabel>
@@ -24,7 +25,7 @@
                 </p:password>
               </div>
               <footer>
-                <p:commandButton  id="submit"   value="Log In" action="#{loginBean.login()}"  update="@form"  /> <br/>
+                <p:commandButton  id="submit"   value="Log In" action="#{loginBean.login()}"    /> <br/>
              
               </footer>
               <br/>

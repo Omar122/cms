@@ -14,25 +14,25 @@
   <div class=".ui-fluid">
     <h:form >
       <div class="field">
-        <p:inputText value="#{userBean.fullName}" id="fullname">Enter Full name</p:inputText> 
+        <p:inputText value="#{userCreation.user.getfullName}" id="fullname">Enter Full name</p:inputText> 
       </div>
       <div class="field">
-        <p:outputLabel>UserName</p:outputLabel><p:inputText value="#{userBean.userName}"></p:inputText>  
+        <p:outputLabel>UserName</p:outputLabel><p:inputText value="#{userCreation.user.userName}"></p:inputText>  
       </div>
       <div class="field">  
-        <p:outputLabel>Password</p:outputLabel><p:password value="#{userBean.password}"  label="Password" feedback="true"> 
+        <p:outputLabel>Password</p:outputLabel><p:password value="#{userCreation.user.password}"  label="Password" feedback="true"> 
          
         </p:password>
       </div>
       <div class="field">  
-        <p:outputLabel>Email</p:outputLabel><h:inputText value="#{userBean.email}"></h:inputText>
+        <p:outputLabel>Email</p:outputLabel><h:inputText value="#{userCreation.user.email}"></h:inputText>
       </div>
       <div class="field">  
-        <p:outputLabel>Mobile Number</p:outputLabel><h:inputText value="#{userBean.mobileNumber}"></h:inputText>
+        <p:outputLabel>Mobile Number</p:outputLabel><h:inputText value="#{userCreation.user.mobileNumber}"></h:inputText>
       </div>
-      <p:commandButton  actionListener="#{userBean.createUser()}" value="Create User"/> <br/>
+      <p:commandButton  actionListener="#{userCreation.createUser()}" value="Create User"/> <br/>
       <p:panel   header="Created User"/>
-       <h:outputText value="#{userBean.user}" />
+       <h:outputText value="#{userCreation.user}" />
     </h:form>
   </div>
   </ui:define>
