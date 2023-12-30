@@ -9,9 +9,12 @@ import javax.naming.NamingException;
 import jakarta.enterprise.inject.Model;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.event.AbortProcessingException;
+import jakarta.faces.event.AjaxBehaviorEvent;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.AuthenticationStatus;
 import static jakarta.security.enterprise.AuthenticationStatus.SEND_FAILURE;
+import static jakarta.security.enterprise.AuthenticationStatus.SUCCESS;
 import jakarta.security.enterprise.SecurityContext;
 import static jakarta.security.enterprise.authentication.mechanism.http.AuthenticationParameters.withParams;
 import jakarta.security.enterprise.credential.Credential;
@@ -33,44 +36,41 @@ public class LoginBean {
   FacesContext facesContext;
 
   @NotNull
-  //@Size(min = 3, max = 15, message = "Username must be between 3 and 15 characters")
   private String username;
 
   @NotNull
-  //@Size(min = 5, max = 50, message = "Password must be between 5 and 50 characters")
   private String password;
-
 
   public LoginBean() {
   }
 
-  public String login() throws NamingException {
+  public Object login() throws NamingException {
 
     Credential credential = new UsernamePasswordCredential(username, new Password(password));
 
     try {
       AuthenticationStatus status = securityContext.authenticate(getHttpRequestFromFacesContext(), getHttpResponseFromFacesContext(), withParams().credential(credential));
-      System.out.println("status"+status);
       switch (status) {
-        case SUCCESS-> {
-          facesContext.responseComplete();
-          return "index.xhtml";
+        case SUCCESS -> {
+            logger.log(Level.SEVERE, "SUCCESS  {0}", SUCCESS.toString());
+          return ("success");
         }
         case SEND_FAILURE -> {
-          addError("Login failed");
-          facesContext.responseComplete();
-          logger.log(Level.SEVERE, "SEND_CONTINUE  {0}", SEND_FAILURE.toString());
-          return null;
+           showValidationError("Login failed");
+          logger.log(Level.SEVERE, "SEND_FAILURE  {0}", SEND_FAILURE.toString());
+          return  ("failure");
         }
-        default ->
-
-          throw new AssertionError();
-
+        case NOT_DONE -> {
+          break;
+        }
+        case SEND_CONTINUE -> {
+          facesContext.responseComplete();
+        }
       }
     } catch (Exception e) {
       logger.log(Level.SEVERE, "Exception  {0}", e.getMessage());
     }
-    return "";
+    return null;
   }
 
   public String getUsername() {
@@ -97,8 +97,17 @@ public class LoginBean {
     return (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
   }
 
-  private void addError(String login_failed) {
-    facesContext.addMessage("", new FacesMessage(FacesMessage.SEVERITY_ERROR, username, login_failed));
+  public void showValidationError(String content) {
+    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, content, null);
+    facesContext.addMessage("", message);
+    FacesContext.getCurrentInstance().addMessage(null, message);
+
+  }
+  
+  public void  facetListener(AjaxBehaviorEvent event) throws AbortProcessingException{
+    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "ajax", null);
+    facesContext.
+     event.getFacesContext().addMessage("",message);
   }
 
 }

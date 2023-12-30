@@ -19,8 +19,9 @@ import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
  */
 @CustomFormAuthenticationMechanismDefinition(loginToContinue = @LoginToContinue(
         loginPage = "login.xhtml",
-        errorPage = "login-error.xhtml",
-        useForwardToLogin = true
+        errorPage = ""
+       
+      
 ))
 @DatabaseIdentityStoreDefinition(
         callerQuery = "select password from users where username = ?",
@@ -36,7 +37,7 @@ import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
 )
 @ApplicationScoped
 @Named
-@FacesConfig
+@FacesConfig()
 public class SecurityConfig {
 
   public String[] getDyna() {

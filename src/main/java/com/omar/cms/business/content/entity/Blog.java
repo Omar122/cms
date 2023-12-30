@@ -7,6 +7,7 @@ package com.omar.cms.business.content.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "BLOGS")
-public class Blog extends AbstractContent{
+public class Blog extends AbstractContent implements Serializable{
   
   @Column(name="TITLE")
   private String title;

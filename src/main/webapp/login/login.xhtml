@@ -1,8 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets" lang="en"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"   xmlns:p="http://primefaces.org/ui">
+      xmlns:ui="jakarta.faces.facelets" lang="en"
+      xmlns:p="http://primefaces.org/ui"   xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
   <h:head><title>Login to CMS</title></h:head>
   <body>
     <ui:composition template="./../template/Template.xhtml">
@@ -12,7 +13,6 @@
         <br/>
         <div class=".ui-fluid">
           <p:panelGrid columns="1">
-            <input value="helllo"></input>
             <h:form id="form"  >
               <div class="field">
                 <p:outputLabel>UserName</p:outputLabel>
@@ -24,12 +24,14 @@
 
                 </p:password>
               </div>
-              <footer>
-                <p:commandButton  id="submit"   value="Log In" action="#{loginBean.login()}"    /> <br/>
-             
-              </footer>
+
+              <p:commandButton  id="login"   value="Log In" action="#{loginBean.login}" update="messages"   />
+              <f:ajax event="login"  listener="#{loginBean.facetListener(event)}" /> 
               <br/>
-               
+              <p:messages  id="messages"  >
+                <p:autoUpdate/>
+                
+              </p:messages>
             </h:form>
           </p:panelGrid>
         </div>

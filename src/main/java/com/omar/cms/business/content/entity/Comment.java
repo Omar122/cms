@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
@@ -22,7 +23,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "Comments")
-public class Comment {
+public class Comment implements Serializable {
 
   public Comment() {
   }
