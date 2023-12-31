@@ -41,6 +41,8 @@ public class LoginBean {
   @NotNull
   private String password;
 
+  AuthenticationStatus status;
+
   public LoginBean() {
   }
 
@@ -49,16 +51,16 @@ public class LoginBean {
     Credential credential = new UsernamePasswordCredential(username, new Password(password));
 
     try {
-      AuthenticationStatus status = securityContext.authenticate(getHttpRequestFromFacesContext(), getHttpResponseFromFacesContext(), withParams().credential(credential));
+      status = securityContext.authenticate(getHttpRequestFromFacesContext(), getHttpResponseFromFacesContext(), withParams().credential(credential));
       switch (status) {
         case SUCCESS -> {
-            logger.log(Level.SEVERE, "SUCCESS  {0}", SUCCESS.toString());
+          logger.log(Level.SEVERE, "SUCCESS  {0}", SUCCESS.toString());
           return ("success");
         }
         case SEND_FAILURE -> {
-           showValidationError("Login failed");
+          showValidationError("Login failed");
           logger.log(Level.SEVERE, "SEND_FAILURE  {0}", SEND_FAILURE.toString());
-          return  ("failure");
+          return (null);
         }
         case NOT_DONE -> {
           break;
@@ -100,14 +102,6 @@ public class LoginBean {
   public void showValidationError(String content) {
     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, content, null);
     facesContext.addMessage("", message);
-    FacesContext.getCurrentInstance().addMessage(null, message);
-
-  }
-  
-  public void  facetListener(AjaxBehaviorEvent event) throws AbortProcessingException{
-    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "ajax", null);
-    facesContext.
-     event.getFacesContext().addMessage("",message);
   }
 
 }

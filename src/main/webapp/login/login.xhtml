@@ -11,27 +11,24 @@
         <h2>CMS Project</h2>
         <h3>Log in</h3>
         <br/>
-        <div class=".ui-fluid">
+        <div class=".ui-fluid card">
           <p:panelGrid columns="1">
             <h:form id="form"  >
               <div class="field">
-                <p:outputLabel>UserName</p:outputLabel>
-                <p:inputText  type="text" value="#{loginBean.username}" label="UserName"  required="true"></p:inputText>  
+
+                <p:inputText  label="Username" type="text" value="#{loginBean.username}"  required="true"></p:inputText>  
               </div>
               <div class="field">  
-                <p:outputLabel>Password</p:outputLabel>
-                <p:password   value="#{loginBean.password}"  label="Password" required="true"> 
+
+                <p:password  label="Password" value="#{loginBean.password}"  required="true"> 
 
                 </p:password>
               </div>
-
-              <p:commandButton  id="login"   value="Log In" action="#{loginBean.login}" update="messages"   />
-              <f:ajax event="login"  listener="#{loginBean.facetListener(event)}" /> 
+              <p:commandButton  id="login" ajax="false"   value="Log In" action="#{loginBean.login}" update="messages" />
               <br/>
-              <p:messages  id="messages"  >
-                <p:autoUpdate/>
-                
-              </p:messages>
+              Dont have an account? <p:link value="Create New Account" ></p:link> 
+                <p:messages  id="messages"  >
+                </p:messages>
             </h:form>
           </p:panelGrid>
         </div>
