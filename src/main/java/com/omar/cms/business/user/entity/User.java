@@ -10,60 +10,59 @@ import java.io.Serializable;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
- 
- 
+
 /**
  *
  * @author carbo
  */
 @Entity
-@Table(name = "USERS" )
+@Table(name = "USERS")
+@NamedQueries({
+  @NamedQuery(name = User.findAll, query = "SELECT u FROM User u"),
+  @NamedQuery(name = User.findUserByEmail, query = "SELECT u FROM User u where u.email = :email")})
 public class User implements Serializable {
 
   private static final long serialVersionUID = 1L;
+
+  static final String PREFIX = "User.";
+  public static final String findAll = PREFIX + "findAll";
+  public static final String findUserByEmail = PREFIX + "findUserByEmail";
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-   
   @Column(name = "FULLNAME")
   @NotBlank
   @NotEmpty
   private String fullName;
 
-  
-  @Column(name = "USERNAME")
-  @NotBlank
-  @NotEmpty
-  private String userName;
-
-   
   @Column(name = "PASSWORD")
   @Size(min = 6)
   private String password;
 
- 
-  @Column(name = "MOBILENUMBER" )
-  @Size(min = 10,max = 10)
+  @Column(name = "MOBILENUMBER")
+  @Size(min = 10, max = 10)
   private String mobileNumber;
 
-  
-  @Column(name = "EMAIL")
+  @Column(name = "EMAIL",unique = true)
   @Email
   private String email;
 
   public User() {
   }
 
-  public User( String fullName, String userName, String password, String mobileNumber, String email) {
+  public User(String fullName, String password, String mobileNumber, String email) {
     this.fullName = fullName;
-    this.userName = userName;
     this.password = password;
     this.mobileNumber = mobileNumber;
     this.email = email;
@@ -83,14 +82,6 @@ public class User implements Serializable {
 
   public void setfullName(String FullName) {
     this.fullName = FullName;
-  }
-
-  public String getUserName() {
-    return userName;
-  }
-
-  public void setUserName(String userName) {
-    this.userName = userName;
   }
 
   public String getPassword() {
@@ -139,9 +130,8 @@ public class User implements Serializable {
 
   @Override
   public String toString() {
-    return "User{" + "id=" + id + ", fullName=" + fullName + ", userName=" + userName +  ", mobileNumber=" + mobileNumber + ", email=" + email + '}';
+    return "User{" + "id=" + id + ", fullName=" + fullName + ", mobileNumber=" + mobileNumber + ", email=" + email + '}';
   }
 
- 
 
 }

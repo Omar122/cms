@@ -9,7 +9,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
 
@@ -31,25 +30,24 @@ public class UserRepository {
 
   private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-  
   @PersistenceContext(name = "open")
   private EntityManager em;
 
-   @Inject
+  @Inject
   private Pbkdf2PasswordHash passwordHash;
 
   @PostConstruct
-  public void init() {
+  private void init() {
     Map<String, String> parameters = new HashMap<>();
     parameters.put("Pbkdf2PasswordHash.Iterations", "3072");
     parameters.put("Pbkdf2PasswordHash.Algorithm", "PBKDF2WithHmacSHA512");
     parameters.put("Pbkdf2PasswordHash.SaltSizeBytes", "64");
     passwordHash.initialize(parameters);
   }
-  
+
   public User create(User user) throws SQLException {
     logger.log(Level.INFO, "Creating user {0}", user.toString());
-   user.setPassword(passwordHash.generate(user.getPassword().toCharArray()));
+    user.setPassword(passwordHash.generate(user.getPassword().toCharArray()));
     em.persist(user);
     return user;
   }
@@ -64,6 +62,11 @@ public class UserRepository {
     return Optional.ofNullable(em.find(User.class, id));
   }
 
+  public Optional<User> findByEmail(String email) {
+    logger.log(Level.INFO, "Getting user by email {0}", email);
+    return Optional.ofNullable((User) em.createNamedQuery(User.findUserByEmail).setParameter("email", email).getSingleResult());
+  }
+
   public void delete(Long id) {
     logger.log(Level.INFO, "Deleting user by id {0}", id);
     var user = findById(id)
@@ -73,27 +76,12 @@ public class UserRepository {
 
   public User update(User user) {
     logger.log(Level.INFO, "Updating user {0}", user.getfullName());
-    return em.merge(user);
-  }
-
-  public Optional<User> findByUsernameAndPassword(String username, String password) {
-    User user = findByUsername(username).orElseThrow();
-
-    if (!user.getPassword().equals(password)) {
-      throw new NoResultException("password wrong");
-    }
-    return Optional.of(user);
-  }
-
-  private Optional<User> findByUsername(String username) {
     try {
-      return Optional.of(em
-              .createQuery("FROM User u WHERE u.username = :username", User.class)
-              .setParameter("username", username)
-              .getSingleResult());
-    } catch (NoResultException e) {
-      return Optional.empty();
+      user=em.merge(user);
+    } catch (Exception e) {
+       logger.log(Level.SEVERE, "Error Updaing user"+user.getEmail(), e);
     }
+    return user ;
   }
 
 }

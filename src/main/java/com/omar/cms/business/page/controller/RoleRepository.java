@@ -29,7 +29,7 @@ public class RoleRepository {
   private EntityManager em;
 
   public Role create(Role role) throws SQLException {
-    logger.log(Level.INFO, "Creating role {0} for user user {1} and page {2}", new Object[]{role.getRoleEnum(), role.getUser().getUserName(), role.getPage().getPageTitle()});
+    logger.log(Level.INFO, "Creating role {0} for user user {1} and page {2}", new Object[]{role.getRoleEnum(), role.getUser().getEmail(), role.getPage().getPageTitle()});
     em.persist(role);
     return role;
   }
@@ -52,7 +52,7 @@ public class RoleRepository {
   }
 
   public Role update(Role role) {
-    logger.log(Level.INFO, "updated role {0} for user user {1} and page {2}", new Object[]{role.getRoleEnum(), role.getUser().getUserName(), role.getPage().getPageTitle()});
+    logger.log(Level.INFO, "updated role {0} for user user {1} and page {2}", new Object[]{role.getRoleEnum(), role.getUser().getEmail(), role.getPage().getPageTitle()});
     return em.merge(role);
   }
 }

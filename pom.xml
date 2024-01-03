@@ -13,7 +13,21 @@
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <arquillian.war.name>arquillian.cms</arquillian.war.name>
+     
   </properties>
+  
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.jboss.arquillian</groupId>
+        <artifactId>arquillian-bom</artifactId>
+        <version>1.8.0.Final</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>
@@ -34,73 +48,195 @@
       <artifactId>postgresql</artifactId>
       <version>42.7.1</version>
     </dependency>
+    <!--- Test -->
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-client</artifactId>
+      <version>6.2.5.Final</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-json-binding-provider</artifactId>
+      <version>6.2.5.Final</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>jakarta.json</artifactId>
+      <version>2.0.1</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
-      <version>5.6.0</version>
+      <version>5.10.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>5.10.1</version>
+    </dependency>
+    <dependency>
+      <groupId>io.openliberty.arquillian</groupId>
+      <artifactId>arquillian-liberty-managed-jakarta-junit5</artifactId>
+      <version>2.1.4</version>
+      <type>pom</type>
+      <scope>test</scope>
+    </dependency>
+    <!--arquillian-liberty-managed-jakarta -->
+    <dependency>
+      <groupId>io.openliberty.arquillian</groupId>
+      <artifactId>arquillian-liberty-managed-jakarta</artifactId>
+      <version>2.1.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-params</artifactId>
-      <version>5.6.0</version>
-      <scope>test</scope>
+      <groupId>io.openliberty.arquillian</groupId>
+      <artifactId>arquillian-liberty-support-jakarta</artifactId>
+      <version>2.1.3</version>
     </dependency>
     <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.6.0</version>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-api</artifactId>
       <scope>test</scope>
+    </dependency>
+    <!-- For JDK 9 & above Support -->
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>2.3.1</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.activation</groupId>
+      <artifactId>activation</artifactId>
+      <version>1.1.1</version>
     </dependency>
   </dependencies>
 
   <build>
     <finalName>cms</finalName>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-war-plugin</artifactId>
-          <version>3.3.2</version>
-        </plugin>
-        <plugin>
-          <groupId>io.openliberty.tools</groupId>
-          <artifactId>liberty-maven-plugin</artifactId>
-          <version>3.10</version>
-          <configuration>
-            <serverName>cms</serverName>
-            <copyDependencies>
-              <dependencyGroup>
-                <location>jdbc</location>
-                <dependency>
-                  <groupId>org.postgresql</groupId>
-                  <artifactId>postgresql</artifactId>
-                  <version>42.7.1</version>
-                </dependency>
-              </dependencyGroup>
-            </copyDependencies>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
+      <!-- maven-war-plugin--> 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.3.2</version>
+        <configuration>
+          <packagingExcludes>pom.xml</packagingExcludes>
+        </configuration>
+      </plugin>
+      <!-- tag::maven-failsafe-plugin[] -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>3.2.3</version>
+        <configuration>
+          <systemPropertyVariables>
+            <arquillian.war.name>${arquillian.war.name}.war</arquillian.war.name>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+      <!--liberty-maven-plugin--> 
       <plugin>
         <groupId>io.openliberty.tools</groupId>
         <artifactId>liberty-maven-plugin</artifactId>
+        <version>3.9</version>
         <configuration>
-            <serverName>cms</serverName>
-            <copyDependencies>
-              <dependencyGroup>
-                <location>jdbc</location>
-                <dependency>
-                  <groupId>org.postgresql</groupId>
-                  <artifactId>postgresql</artifactId>
-                  <version>42.7.1</version>
-                </dependency>
-              </dependencyGroup>
-            </copyDependencies>
-          </configuration>
+          <copyDependencies>
+            <dependencyGroup>
+              <location>jdbc</location>
+              <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>42.7.1</version>
+              </dependency>
+            </dependencyGroup>
+          </copyDependencies>
+          <!-- begin configure-arquillian -->
+          
+          <skipIfArquillianXmlExists>true</skipIfArquillianXmlExists>
+          <arquillianProperties>
+            <javaVmArguments>
+              -Dsystem.context.root=/${arquillian.war.name}
+            </javaVmArguments>
+            <allowConnectingToRunningServer>true</allowConnectingToRunningServer>
+          </arquillianProperties>
+        </configuration>
+        <executions>
+          <execution>
+            <id>configure-arquillian-xml</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>configure-arquillian</goal>
+            </goals>
+          </execution>
+ 
+          <execution>
+            <id>create-server</id>
+            <!-- Plugin execution only succeeds here in the correct order because
+            execution id of the test is not 'default-test'.
+            Because Maven. See MNG-5799 and MNG-5987 -->
+            <phase>test</phase>
+            <configuration>
+              <serverName>defaultServer</serverName>
+              <serverXmlFile>src/test/resources/server.xml</serverXmlFile>
+            </configuration>
+            <goals>
+              <goal>create</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <!--maven-dependency-plugin--> 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.6.1</version>
+        <executions>
+          <execution>
+            <id>extract-support-feature</id>
+            <phase>test</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <artifactItems>
+            <artifactItem>
+              <groupId>io.openliberty.arquillian</groupId>
+              <artifactId>arquillian-liberty-support-jakarta</artifactId>
+              <version>2.1.3</version>
+              <type>zip</type>
+              <classifier>feature</classifier>
+              <overWrite>false</overWrite>
+              <outputDirectory>${project.build.directory}/liberty/wlp/usr</outputDirectory>
+            </artifactItem>
+          </artifactItems>
+        </configuration>
       </plugin>
     </plugins>
+    <!--
+    <testResources>
+      <testResource>
+        <directory>src/test/arq-liberty-managed</directory>
+        <includes>
+          <include>*</include>
+        </includes>
+        <excludes>
+          <exclude>server.xml</exclude>
+        </excludes>
+      </testResource>
+      <testResource>
+        <directory>src/test/arq-liberty-managed</directory>
+        <includes>
+          <include>server.xml</include>
+        </includes>
+        <targetPath>
+          ${project.build.directory}/liberty/wlp/usr/servers/defaultServer
+        </targetPath>
+      </testResource>
+    </testResources> -->
   </build>
 </project>

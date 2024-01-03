@@ -24,7 +24,7 @@ import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
       
 ))
 @DatabaseIdentityStoreDefinition(
-        callerQuery = "select password from users where username = ?",
+        callerQuery = "select password from users where email = ?",
         useFor = {IdentityStore.ValidationType.VALIDATE},
           
         dataSourceLookup = "jdbc/myDB",
