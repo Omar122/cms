@@ -4,8 +4,7 @@
  */
 package com.omar.cms.business.page.controller;
 
-
-import com.omar.cms.business.page.entity.Role;
+import com.omar.cms.business.page.entity.RoleAssignment;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -21,38 +20,36 @@ import java.util.logging.Logger;
  * @author carbo
  */
 @Stateless
-public class RoleRepository {
+public class RoleAssignmentRepository {
 
   private static final Logger logger = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
   @PersistenceContext(name = "open")
   private EntityManager em;
 
-  public Role create(Role role) throws SQLException {
-    logger.log(Level.INFO, "Creating role {0} for user user {1} and page {2}", new Object[]{role.getRoleEnum(), role.getUser().getEmail(), role.getPage().getPageTitle()});
-    em.persist(role);
-    return role;
+  public RoleAssignment create(RoleAssignment roleAssignment) throws SQLException {
+    em.persist(roleAssignment);
+    logger.info("create all roleAssignmentAssignment");
+    return roleAssignment;
   }
 
-  public List<Role> findAll() {
-    logger.info("Getting all role");
-    return em.createQuery("SELECT c FROM Role c", Role.class).getResultList();
+  public List<RoleAssignment> findAll() {
+    logger.info("Getting all roleAssignmentAssignment");
+    return em.createQuery("SELECT c FROM RoleAssignment c", RoleAssignment.class).getResultList();
   }
 
-  public Optional<Role> findById(Long id) {
-    logger.log(Level.INFO, "Getting role by id {0}", id);
-    return Optional.ofNullable(em.find(Role.class, id));
+  public Optional<RoleAssignment> findById(Long id) {
+    logger.log(Level.INFO, "Getting roleAssignment by id {0}", id);
+    return Optional.ofNullable(em.find(RoleAssignment.class, id));
   }
 
   public void delete(Long id) {
-    logger.log(Level.INFO, "Deleting role by id {0}", id);
-    var role = findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid role Id:" + id));
-    em.remove(role);
+    var roleAssignment = findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid roleAssignment Id:" + id));
+    em.remove(roleAssignment);
   }
 
-  public Role update(Role role) {
-    logger.log(Level.INFO, "updated role {0} for user user {1} and page {2}", new Object[]{role.getRoleEnum(), role.getUser().getEmail(), role.getPage().getPageTitle()});
-    return em.merge(role);
+  public RoleAssignment update(RoleAssignment roleAssignment) {
+    return em.merge(roleAssignment);
   }
 }

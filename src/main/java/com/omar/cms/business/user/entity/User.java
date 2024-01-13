@@ -4,28 +4,36 @@
  */
 package com.omar.cms.business.user.entity;
 
+import com.omar.cms.business.page.entity.Page;
+import com.omar.cms.business.page.entity.Role;
+import com.omar.cms.business.page.entity.RoleAssignment;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import java.io.Serializable;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.MapKeyJoinColumn;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
  * @author carbo
  */
 @Entity
-@Table(name = "USERS")
+@Table(name = "USERS", schema = "CMS")
 @NamedQueries({
   @NamedQuery(name = User.findAll, query = "SELECT u FROM User u"),
   @NamedQuery(name = User.findUserByEmail, query = "SELECT u FROM User u where u.email = :email")})
@@ -54,9 +62,17 @@ public class User implements Serializable {
   @Size(min = 10, max = 10)
   private String mobileNumber;
 
-  @Column(name = "EMAIL",unique = true)
+  @Column(name = "EMAIL", unique = true)
   @Email
   private String email;
+
+  /*
+  @OneToMany
+  @JoinTable(schema = "CMS",name = "page_role")
+  @MapKeyJoinColumn(name = "page_id")
+  private Map<Page, Role> pageRoles = new HashMap<>();*/
+  @OneToMany(mappedBy = "user")
+  Set<RoleAssignment> roleAssignments = new HashSet<>();
 
   public User() {
   }
@@ -128,10 +144,26 @@ public class User implements Serializable {
     return true;
   }
 
+  public String getFullName() {
+    return fullName;
+  }
+
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
+
+  public Set<RoleAssignment> getRoleAssignments() {
+    return roleAssignments;
+  }
+
+  public void setRoleAssignments(Set<RoleAssignment> roleAssignments) {
+    this.roleAssignments = roleAssignments;
+  }
+
+
   @Override
   public String toString() {
     return "User{" + "id=" + id + ", fullName=" + fullName + ", mobileNumber=" + mobileNumber + ", email=" + email + '}';
   }
-
 
 }

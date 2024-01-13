@@ -4,17 +4,12 @@
  */
 package com.omar.cms.business.page.entity;
 
-
-import com.omar.cms.business.user.entity.User;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.util.Objects;
@@ -24,20 +19,12 @@ import java.util.Objects;
  * @author carbo
  */
 @Entity
-@Table(name = "Roles")
+@Table(name = "user_roles", schema = "CMS")
 public class Role implements Serializable {
 
   @Id
-  @GeneratedValue
+ @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
-
- @OneToOne(fetch = FetchType.LAZY ,cascade = CascadeType.ALL)
-  @JoinColumn(name = "PAGE_ID")
-  private Page page;
-
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "USER_ID")
-  private User user;
 
   @Enumerated(EnumType.STRING)
   private RoleEnums RoleEnum;
@@ -48,22 +35,6 @@ public class Role implements Serializable {
 
   public void setId(long id) {
     this.id = id;
-  }
-
-  public Page getPage() {
-    return page;
-  }
-
-  public void setPage(Page page) {
-    this.page = page;
-  }
-
-  public User getUser() {
-    return user;
-  }
-
-  public void setUser(User user) {
-    this.user = user;
   }
 
   public RoleEnums getRoleEnum() {
@@ -78,8 +49,6 @@ public class Role implements Serializable {
   public int hashCode() {
     int hash = 7;
     hash = 97 * hash + (int) (this.id ^ (this.id >>> 32));
-    hash = 97 * hash + Objects.hashCode(this.page);
-    hash = 97 * hash + Objects.hashCode(this.user);
     hash = 97 * hash + Objects.hashCode(this.RoleEnum);
     return hash;
   }
@@ -99,20 +68,13 @@ public class Role implements Serializable {
     if (this.id != other.id) {
       return false;
     }
-    if (!Objects.equals(this.page, other.page)) {
-      return false;
-    }
-    if (!Objects.equals(this.user, other.user)) {
-      return false;
-    }
+
     return this.RoleEnum == other.RoleEnum;
   }
 
   @Override
   public String toString() {
-    return "Role{" + "id=" + id + ", page=" + page + ", user=" + user + ", enums=" + RoleEnum + '}';
+    return "Role{" + "id=" + id + ", RoleEnum=" + RoleEnum + '}';
   }
-  
-  
 
 }

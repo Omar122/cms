@@ -155,10 +155,10 @@
           </copyDependencies>
           <!-- begin configure-arquillian -->
           
-          <skipIfArquillianXmlExists>true</skipIfArquillianXmlExists>
+          <skipIfArquillianXmlExists>false</skipIfArquillianXmlExists>
           <arquillianProperties>
             <javaVmArguments>
-              -Dsystem.context.root=/${arquillian.war.name}
+              -Dsystem.context.root=/cms
             </javaVmArguments>
             <allowConnectingToRunningServer>true</allowConnectingToRunningServer>
           </arquillianProperties>

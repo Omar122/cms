@@ -4,14 +4,7 @@
  */
 package com.omar.cms.business.content.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import java.io.Serializable;
 import java.util.Date;
@@ -22,7 +15,10 @@ import java.util.Objects;
  * @author carbo
  */
 @Entity
-@Table(name = "Comments")
+@Table(name = "COMMENTS", schema = "CMS")
+@NamedQueries({
+        @NamedQuery(name = "Comment.findByBlog_Id", query = "select c from Comment c where c.blog.id = :id")
+})
 public class Comment implements Serializable {
 
   public Comment() {
@@ -40,8 +36,7 @@ public class Comment implements Serializable {
   @Email
   private String email;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "BLOG_ID")
+  @ManyToOne
   private Blog blog;
 
   @Column(name = "text")

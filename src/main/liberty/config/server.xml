@@ -59,7 +59,7 @@
                            user="postgres"
                            password=""/>
   </dataSource>
-
+  <logging traceSpecification="*=audit:com.ibm.ws.jdbc.*=all"/>
   <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
   <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
 </server>

@@ -6,18 +6,19 @@ package com.omar.cms.business.content.entity;
 
 import java.util.Date;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
 /**
  *
  * @author carbo
  */
 @Entity
+@Table(name = "BLOGSREVS", schema = "CMS")
+@NamedQueries({
+        @NamedQuery(name = "BlogRevision.findByBlog_Id", query = "select b from BlogRevision b where b.blog.id = :id"),
+        @NamedQuery(name = "BlogRevision.findByBlog_User", query = "select b from BlogRevision b where b.blog.user = :user"),
+        @NamedQuery(name = "BlogRevision.findByPage", query = "select b from BlogRevision b where b.page = :page")
+})
 public class BlogRevision extends AbstractContent {
 
   
@@ -27,10 +28,22 @@ public class BlogRevision extends AbstractContent {
 
   @Column(name = "DATE")
   private Date date;
+  
+  @Column(name = "BlogType")
+  @Enumerated(EnumType.STRING)
+  private BlogType Type;
 
   /* LAter 
   @Column(name = "Comment")
   private String Comment;*/
+
+  public BlogType getType() {
+    return Type;
+  }
+
+  public void setType(BlogType Type) {
+    this.Type = Type;
+  }
 
 
   public Blog getBlog() {

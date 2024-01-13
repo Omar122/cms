@@ -1,21 +1,24 @@
 package com.omar.cms.business.page.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.omar.cms.business.user.entity.User;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
  * @author carbo
  */
 @Entity
-@Table(name = "Pages")
+@Table(name = "PAGES", schema = "CMS")
+@NamedQueries({
+  @NamedQuery(name = "Page.findAll", query = "select p from Page p")
+})
 public class Page implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -24,7 +27,7 @@ public class Page implements Serializable {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
-  @Size(min = 4, max = 12, message = "Page title must have title")
+  @Size(min = 4, max = 35, message = "Page title must have title")
   private String pageTitle;
 
   @NotEmpty
@@ -32,9 +35,16 @@ public class Page implements Serializable {
 
   private Date dateOfCreation;
 
-  private String category;
+  private String tagLine;
 
-  
+  /*
+  @OneToMany
+  @JoinTable(name = "user_role", schema = "CMS")
+  @MapKeyJoinColumn(name = "user_id")
+  private Map<User, Role> userRoles = new HashMap<>();*/
+  @OneToMany(mappedBy = "page")
+  Set<RoleAssignment> roleAssignments = new HashSet<>();
+
 //Roles,Abstract Content 
   public Long getId() {
     return id;
@@ -68,20 +78,12 @@ public class Page implements Serializable {
     this.dateOfCreation = dateOfCreation;
   }
 
-  public String getCatogery() {
-    return category;
+  public String getTagLine() {
+    return tagLine;
   }
 
-  public void setCatogery(String category) {
-    this.category = category;
-  }
-
-  public String getCategory() {
-    return category;
-  }
-
-  public void setCategory(String category) {
-    this.category = category;
+  public void setTagLine(String tagLine) {
+    this.tagLine = tagLine;
   }
 
   @Override
@@ -106,7 +108,17 @@ public class Page implements Serializable {
 
   @Override
   public String toString() {
-    return "Page{" + "id=" + id + ", pageTitle=" + pageTitle + ", about=" + about + ", dateOfCreation=" + dateOfCreation + ", category=" + category + '}';
+    return "Page{" + "id=" + id + ", pageTitle=" + pageTitle + ", about=" + about + ", dateOfCreation=" + dateOfCreation + ", category=" + tagLine + '}';
   }
+
+  public Set<RoleAssignment> getRoleAssignments() {
+    return roleAssignments;
+  }
+
+  public void setRoleAssignments(Set<RoleAssignment> roleAssignments) {
+    this.roleAssignments = roleAssignments;
+  }
+
+ 
 
 }

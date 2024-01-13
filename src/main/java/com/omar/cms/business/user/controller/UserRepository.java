@@ -84,4 +84,12 @@ public class UserRepository {
     return user ;
   }
 
+  public EntityManager getEm() {
+    return em;
+  }
+
+  public void setEm(EntityManager em) {
+    this.em = em;
+  }
+
 }
